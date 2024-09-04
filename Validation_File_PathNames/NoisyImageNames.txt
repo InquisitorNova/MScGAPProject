@@ -1,0 +1,10 @@
+ValidationFIle\-40-32NI.pth
+ValidationFIle\-32-24NI.pth
+ValidationFIle\-24-16NI.pth
+ValidationFIle\-16-8NI.pth
+ValidationFIle\-80NI.pth
+ValidationFIle\08NI.pth
+ValidationFIle\816NI.pth
+ValidationFIle\1624NI.pth
+ValidationFIle\2432NI.pth
+ValidationFIle\3240NI.pth

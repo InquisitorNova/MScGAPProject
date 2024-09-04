@@ -1,0 +1,8 @@
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\-40-30NI.pth
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\-30-20NI.pth
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\-20-10NI.pth
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\-100NI.pth
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\010NI.pth
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\1020NI.pth
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\2030NI.pth
+C:\Users\kdarn\OneDrive\Documents\Life's Portfolio\Projects\GAPGalaxies\TestSet\3040NI.pth
