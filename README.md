@@ -77,14 +77,14 @@ Deep Supervision Model = Single GAP Model covering the whole PSNR range with aux
 Gated Model = Single GAP Model with convolutional and attention-based gates = ResidualGatedUNet_Final.py <br>
 PSNR_Model = Single GAP Model conditioned on the input psnr level of the feature maps = PSNRUNet_Final_2.py <br>
 HybridDilated_Model = Single GAP model which utilises hybrid dilation blocks = HybridDilatedResidualUNet_Final2.py  <br
-AdaptiveUNet_Final = Single GAP model which utilises FiLM and AdaIN layers = AdaptiveResidualUNet_Final2.py
-CBAMUNet_Final = Single GAP model which utilises Convolutional Block Attention Modules (CBAM) = CBAM_ResidualUNet_Final.py
-Attention_Model = Single GAP Model which utilises multiheaded self-attention mechanisms = AttentionResidualUNet_Final.py
-Cross_Attention_Model = Single GAP Model which utilises conditioned self-attention mechanisms = CrossAttentionUNet_Final2.py
-DenseUNet_Model = Single GAP Model which utilises densely connected convolutional layers = DenseUNet_Final2.py
-Hierarchical_Model = Single GAP Model which utilises the hierarchical learning mechanism = AdvancedGatedUNet_Final.py
-Dynamic Convolutional Model = Single GAP which uitilises Dynamic Convolutions = GatedDynamicUNet_Final.py
-Hierarhical_Dynamic_Mode = Single GAP Model which utilises both Dynamic and Hierarchical Based Learning = HierarchicalUNet_Final.py
+AdaptiveUNet_Final = Single GAP model which utilises FiLM and AdaIN layers = AdaptiveResidualUNet_Final2.py <br>
+CBAMUNet_Final = Single GAP model which utilises Convolutional Block Attention Modules (CBAM) = CBAM_ResidualUNet_Final.py <br>
+Attention_Model = Single GAP Model which utilises multiheaded self-attention mechanisms = AttentionResidualUNet_Final.py <br>
+Cross_Attention_Model = Single GAP Model which utilises conditioned self-attention mechanisms = CrossAttentionUNet_Final2.py <br>
+DenseUNet_Model = Single GAP Model which utilises densely connected convolutional layers = DenseUNet_Final2.py <br>
+Hierarchical_Model = Single GAP Model which utilises the hierarchical learning mechanism = AdvancedGatedUNet_Final.py <br>
+Dynamic Convolutional Model = Single GAP which uitilises Dynamic Convolutions = GatedDynamicUNet_Final.py <br>
+Hierarhical_Dynamic_Mode = Single GAP Model which utilises both Dynamic and Hierarchical Based Learning = HierarchicalUNet_Final.py <br>
 
 
 
