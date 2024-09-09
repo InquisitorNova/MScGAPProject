@@ -3,9 +3,16 @@ This is a modified Res-UNet implementation that builds upon the work of Jackson 
 (https://github.com/jaxony/unet-pytorch/)
 and Alex Krull. 
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
-I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
-such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+I have modifield the UNet to be incorporated into my implementation of the GAP Framework, 
+adding additional features such as the ability to use different activation functions, and the ability to use different
+amounts of layers in the ResBlock. I have modified the ResBlock to include Group Normalisation
+and Channel Attention Blocks. The ResBlock is based on the DenseNet architecture, which is designed
+to alleviate the vanishing gradient problem whie also improving the efficiency of the network by
+enocuraging parameter reuseability. The ResBlock is designed to be used with 2D image data.
+This network is based on ideas from the following papers:
+1. "Densely Connected Convolutional Networks" by Gao Huang et al. 
+2. "Squeeze-and-Excitation Networks" by Jie Hu et al. 
+3. "Fully Dense UNet for 2D Sparse Photoacoustic Tomography Image Reconstruction" by Steven Guan et al.  
 
 The original MIT License is as follows:
 
@@ -65,6 +72,7 @@ def find_group_number(channels, min_group_channels = 4, max_group_channels = 32)
     return 1
 
 class DenseLayer(nn.Module):
+    # The Dense Convolutional Neural Network Paper https://arxiv.org/pdf/1608.06993.pdf
     def __init__(self, in_channels, activation = nn.LeakyReLU(),
                  dropout_rate = 0.2, growth_rate = 32, bottleneck_factor = 4):
         super(DenseLayer, self).__init__()
@@ -111,6 +119,9 @@ class Channel_Attention(nn.Module):
     channels - The number of channels in the image representation.
     reduction_ratio - The reduction ratio used in the block.
     embedding_dim - The embedding dimension used in the block.
+    This code is based on the following paper:
+    "Squeeze-and-Excitation Networks" by Jie Hu et al.https://arxiv.org/pdf/1709.01507
+    "Convolutional Block Attention Module" by Sanghyun Wo et al. https://arxiv.org/pdf/1807.06521v2.pdf
     """
     def __init__(self, channels, reduction_ratio = 16, embedding_dim = 128):
         super(Channel_Attention, self).__init__()
@@ -333,6 +344,12 @@ class DenseUNet(pl.LightningModule):
     As the image is upsampled, spatial resolution is increased while the number of channels is decreased.
     The ResUNet class is designed to be used with 2D image data.
     in_channels = The number of channels in the input image representation.
+    This code is based on the following papers:
+    1. "U-Net: Convolutional Networks for Biomedical Image Segmentation" by Olaf Ronneberger et al.
+    2. "Densely Connected Convolutional Networks" by Gao Huang et al.
+    3. "Fully Dense UNet for 2D Sparse Photoacoustic Tomography Image Reconstruction" by Steven Guan et al.
+    4. "Squeeze-and-Excitation Networks" by Jie Hu et al.
+    5. "Convolutional Block Attention Module" by Sanghyun Wo et al.
     """
 
     def __init__(

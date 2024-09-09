@@ -5,7 +5,9 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. The ResUNet is modified to include the Convolutional Block Attention Module
+(CBAM) which is used to introduce a level of dynamism in the network through the use of the attention mechanism.
+The module is designed to be incorporated into the ResUNet architecture.
 
 The original MIT License is as follows:
 
@@ -59,6 +61,7 @@ class Spatial_Attention(nn.Module):
     of the block is the image representation multiplied by the spatial attention weights.
     channels - The number of channels in the image representation.
     kernel_size - The size of the kernel used in the convolutional layer of the block.
+    https://arxiv.org/pdf/1807.06521v2.pdf
     """
     def __init__(self, channels, kernel_size = 7):
         super(Spatial_Attention, self).__init__()
@@ -86,6 +89,7 @@ class Channel_Attention(nn.Module):
     channels - The number of channels in the image representation.
     reduction_ratio - The reduction ratio used in the block.
     embedding_dim - The embedding dimension used in the block.
+    https://arxiv.org/pdf/1807.06521v2.pdf
     """
     def __init__(self, channels, reduction_ratio = 16, embedding_dim = 128):
         super(Channel_Attention, self).__init__()
@@ -126,6 +130,8 @@ class Channel_Spatial_Attention(nn.Module):
     to perform both channel and spatial attention on the image representation.]
     in_channels - The number of channels in the image representation.
     reduction_ratio - The reduction ratio used in the block.
+    https://arxiv.org/pdf/1807.06521v2.pdf
+       
     """
     def __init__(self, in_channels, reduction_ratio = 16):
         super(Channel_Spatial_Attention, self).__init__()
@@ -151,6 +157,9 @@ class Feature_Inception_Block(nn.Module):
     in_channels - The number of channels in the input image representation.
     out_channels - The number of channels in the output image representation.
     reduction_ratio - The reduction ratio used in the block.
+    Han, Lintao & Zhao, Yuchen & Lv, Hengyi & Zhang, Yisa & Liu, Hailong & Bi, Guoling. (2022). 
+    Remote Sensing Image Denoising Based on Deep and Shallow Feature Fusion and Attention Mechanism. 
+    Remote Sensing. 14. 1243. 10.3390/rs14051243. 
     """
     def __init__(self, in_channels, out_channels, reduction_ratio = 16):
         super(Feature_Inception_Block, self).__init__()

@@ -5,7 +5,10 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. The ResBlock has been modified to include GroupNorm layers
+and Gated Convolutions. The ResBlock is based on the ResBlock introduced in the paper:
+https://arxiv.org/abs/1806.03589. The GatedUNet is designed to allow the network to control 
+the information that flows through the network. The GatedUNet is designed to be used with 2D image data.
 
 The original MIT License is as follows:
 
@@ -92,6 +95,7 @@ class AttentionGate(nn.Module):
     F_g = The number of channels in the encoder layer.
     F_l = The number of channels in the decoder layer.
     F_int = The number of channels in the intermediate layer.
+    https://arxiv.org/abs/1804.03999
     """
     def __init__(self, F_g, F_l, F_int):
         super(AttentionGate, self).__init__()
@@ -541,8 +545,11 @@ class GatedUNet(pl.LightningModule):
     def configure_optimizers(self):
         num_warm_steps = self.mini_batches * self.warm_up_epochs
         num_training_steps = self.mini_batches * self.epochs
-        optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate, weight_decay = 1e-4)
 
+        # Replace Adam with AdamW to improve the generalisation of the model.
+        optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate, weight_decay = 1e-4)
+        
+        # Use the OneCycleLR learning rate scheduler to improve the generalisation of the model.        
         Scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr = self.learning_rate, total_steps = num_training_steps, 
                                                       epochs = self.epochs, pct_start = 0.1, anneal_strategy = "cos", 
                                                       div_factor = 10.0, final_div_factor = 1.0)

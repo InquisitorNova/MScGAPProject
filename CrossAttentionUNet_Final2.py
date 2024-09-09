@@ -5,8 +5,16 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
-
+amounts of layers in the ResBlock. The ResBlock has been modified to include Group Normalisation
+layers, and the UNet has been modified to include a Noise Embedder module that can be used to
+condition the network on a given input. The UNet has also been modified to include a CrossAttentionBlock
+module that can be used to incorporate attention mechanisms into the network. The UNet has been modified
+to include a CrossAttnResUNet class that can be used to train the network. The UNet has been modified
+to include a photonLoss function that can be used to train the network on photon data. The UNet has been
+modified to include a MSELoss function that can be used to train the network on MSE data. The UNet has
+https://arxiv.org/pdf/1706.03762
+For reference here is the Pytorch implementation of the Transformer module:
+https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/transformer.py
 The original MIT License is as follows:
 
 MIT License
@@ -114,6 +122,7 @@ class NoiseEmbedder(nn.Module):
         return x
 
 def attention(query, key, value, scale, dropout = None):
+    #https://arxiv.org/pdf/1706.03762
     # Compute the attention scores
     scores = torch.matmul(query, key.transpose(-2, -1)) / scale
     scores = F.softmax(scores, dim=-1)
@@ -141,6 +150,7 @@ class CrossAttentionBlock(nn.Module):
     to obtain the attention weights. The attention weights are then used to weight the value
     vectors to obtain the final output of the attention block.
     The output is then reshaped back into an image representation.
+    https://arxiv.org/pdf/1706.03762
     
     """
 
@@ -416,7 +426,9 @@ class CrossAttnResUNet(pl.LightningModule):
     is downsampled, spatial resolution is decreased while the number of channels is increased.
     As the image is upsampled, spatial resolution is increased while the number of channels is decreased.
     The ResUNet class is designed to be used with 2D image data.
-    in_channels = The number of channels in the input image representation.
+    in_channels = The number of channels in the input image representation. This code
+    is inspired by the Attention is all you need paper and the Attention UNet paper: 
+    https://arxiv.org/pdf/1706.03762 and https://arxiv.org/pdf/1804.03999
     """
 
     def __init__(

@@ -5,7 +5,12 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. Specifically, I have added the ability to use GroupNorm layers
+in the ResBlock, and the ability to use different numbers of layers in the ResBlock. I have also
+added the ability to use different numbers of channels in the ResBlock. For this UNet, I have also 
+implemented a Deep Supervision mechanism https://arxiv.org/abs/2207.02376, where the network is trained with auxiliary losses at
+different depths of the network. This is designed to improve the training of the network, and to
+improve the generalisation of the network. The network is designed to be used with 2D image data.
 
 The original MIT License is as follows:
 
@@ -483,6 +488,7 @@ class DeepSupResUNet(pl.LightningModule):
         down_loss, up_loss = 0,0
 
         # Compute Intermediate Losses to enforce DeepSupervision
+        # This is designed to improve the training of the network.
         for index in range(len(down_intermediates)):
             down_intermediate = down_intermediates[index]
             downsampled_target = F.interpolate(target_img, size = down_intermediate.shape[-2:], mode = 'bilinear')
@@ -532,8 +538,11 @@ class DeepSupResUNet(pl.LightningModule):
     def configure_optimizers(self):
         num_warm_steps = self.mini_batches * self.warm_up_epochs
         num_training_steps = self.mini_batches * self.epochs
+
+        # Replaced the Adam Optimizer with the AdamW Optimizer to improve the training of the network.
         optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate, weight_decay = 1e-4)
 
+        # Introduced a OneCycleLR Scheduler to improve the training of the network.
         Scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr = self.learning_rate, total_steps = num_training_steps, 
                                                       epochs = self.epochs, pct_start = 0.1, anneal_strategy = "cos", 
                                                       div_factor = 10.0, final_div_factor = 1.0)

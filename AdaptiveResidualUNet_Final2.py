@@ -2,10 +2,28 @@
 This is a modified Res-UNet implementation that builds upon the work of Jackson Haung
 (https://github.com/jaxony/unet-pytorch/)
 and Alex Krull. 
+
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. The ResBlock has been modified to include Group Normalisation
+layers, and the FiLM and AdaIN layers have been added to the network. The FiLM and AdaIN layers
+are used to modulate the features in the image based on the PSNR value. The NoiseEmbedder module
+is used to form an embedding vector from the PSNR value that can be used to condition the network.
+The AdaptiveResUNet class is designed
+to be incorporated within the GAP Framework. It is a fully-convolutional
+neural network with skip connections that allow for information to travel
+between the encoder and decoder pathways making up the network. The encoder
+pathway is designed to downsample the input image representation, while the
+is designed to upsample the input image representation. 
+
+The UNet is based  on the following papers:
+1. U-Net: Convolutional Networks for Biomedical Image Segmentation
+   https://arxiv.org/abs/1505.04597.pdf
+2. FiLM: Visual Reasoning with a General Conditioning Layer
+    https://arxiv.org/pdf/1709.07871.pdf
+3. Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization
+    https://arxiv.org/pdf/1703.06868.pdf    
 
 The original MIT License is as follows:
 
@@ -70,6 +88,7 @@ class FiLM(nn.Module):
     FiLM - Feature-wise Linear Modulation Layer
     num_features - Number of Features in the Image
     This layer is used to modulate the features in the image based on the PSNR value.
+    https://arxiv.org/pdf/1709.07871.pdf
     """
     def __init__(self, embedding_dim, num_features):
         super(FiLM, self).__init__()
@@ -100,6 +119,7 @@ class AdaIN(nn.Module):
     AdaIN - Adaptive Instance Normalisation Layer
     num_features - Number of Features in the Image
     This layer is used to adaptively normalise the features in the image based on the PSNR value.
+    https://arxiv.org/pdf/1703.06868.pdf
     """
     def __init__(self, embedding_dim, num_features):
         super(AdaIN, self).__init__()

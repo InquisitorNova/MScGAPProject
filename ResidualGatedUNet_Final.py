@@ -1,9 +1,16 @@
 """
-This is a modified version of the U-Net implementation by Jackson Huang
+This is a modified Res-UNet implementation that builds upon the work of Jackson Haung
 (https://github.com/jaxony/unet-pytorch/)
+and Alex Krull. 
+https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
+I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
+such as the ability to use different activation functions, and the ability to use different
+amounts of layers in the ResBlock. The ResBlock has been modified to include GroupNorm layers
+and Gated Convolutions. The ResBlock is based on the ResBlock introduced in the paper:
+https://arxiv.org/abs/1806.03589. The GatedUNet is designed to allow the network to control 
+the information that flows through the network. The GatedUNet is designed to be used with 2D image data.
 
-
-This is the original license text:
+The original MIT License is as follows:
 
 MIT License
 
@@ -27,7 +34,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
 
 import torch
 import torch.nn as nn

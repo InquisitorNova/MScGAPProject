@@ -5,7 +5,18 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. I have also added the ability to use GroupNorm layers in the ResBlock.
+I have modified the UNet so that it is used to predict the residual between the noisy and clean image, taking
+in a prior image representation and a PSNR value as input. The UNet is trained to predict the residual between the
+noisy and clean image, and the predicted residual is added to the prior image representation to produce the final
+denoised image. The UNet is trained using a photon loss, which is a modified version of the Poisson loss, and a mean
+squared error loss. The UNet is trained using the AdamW optimizer and a OneCycle learning rate scheduler. This UNet 
+is based of of the following papers:
+1. U-Net: Convolutional Networks for Biomedical Image Segmentation by Ronneberger et al. https://arxiv.org/abs/1505.04597.pdf
+2. Beyond a Gaussian Denoiser: Residual Learning of Deep CNN for Image Denoising by Zhang et al. https://arxiv.org/abs/1608.03981.pdf
+3. A DISCIPLINED APPROACH TO NEURAL NETWORK
+HYPER-PARAMETERS: PART 1 – LEARNING RATE,
+BATCH SIZE, MOMENTUM, AND WEIGHT DECAY by Leslie N. Smith https://arxiv.org/pdf/1803.09820.pdf
 
 The original MIT License is as follows:
 
@@ -252,6 +263,24 @@ class ResUNet(pl.LightningModule):
     As the image is upsampled, spatial resolution is increased while the number of channels is decreased.
     The ResUNet class is designed to be used with 2D image data.
     in_channels = The number of channels in the input image representation.
+    levels = The number of levels in the ResUNet.
+    channels = The number of channels in the input image representation.
+    depth = The depth of the ResUNet.
+    up_mode = The method used to upsample the input image representation.
+    merge_mode = The method used to merge the input and upsampled image representations.
+    num_layers = The number of convolutional layers in the ResBlock.
+    activation = The activation function used in the ResBlock.
+    dropout_rate = The dropout rate used in the ResBlock.
+    learning_rate = The learning rate used in the AdamW optimizer.
+    weight_decay = The weight decay used in the AdamW optimizer.
+    starting_filters = The number of starting filters used in the ResUNet.
+    num_blocks_per_layer = The number of ResBlocks per layer in the ResUNet.
+    mini_batches = The number of mini-batches used in the ResUNet.
+    warm_up_epochs = The number of warm-up epochs used in the ResUNet.
+    epochs = The number of epochs used in the ResUNet.
+    average_face = The average face used in the ResUNet.
+    bottleneck = The number of channels in the bottleneck of the ResUNet.
+    device = The device used to train the ResUNet.
     """
 
     def __init__(

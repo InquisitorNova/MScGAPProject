@@ -5,8 +5,16 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. This implementation includes the use of GroupNorm layers
+and the ability to use different numbers of channels in the ResBlock. The ResBlock is designed
+with the incorporation of Gated Convolutional layers, Attention Gates, and Dynamic Convolutional
+layers. The ResBlock is designed to be used with 2D image data. This UNet is inspired by the
+following papers:
 
+1. "U-Net: Convolutional Networks for Biomedical Image Segmentation" by Ronneberger et al.
+2. "Attention U-Net: Learning Where to Look for the Pancreas" by Oktay et al.
+3. "Free-Form Image Inpainting with Gated Convolution by Yu et al.
+4. "Dynamic Convolution: Attention over Convolution Kernels" by Chen et al.
 The original MIT License is as follows:
 
 MIT License
@@ -125,6 +133,7 @@ class AttentionGate(nn.Module):
     F_g = The number of channels in the encoder layer.
     F_l = The number of channels in the decoder layer.
     F_int = The number of channels in the intermediate layer.
+    https://arxiv.org/abs/1804.03999
     """
     def __init__(self, F_g, F_l, F_int):
         super(AttentionGate, self).__init__()
@@ -165,6 +174,7 @@ def Obtain_Temperature(epoch, num_epochs, start_temperature, end_temperature):
 
 # Define the Dynamic Convolution 2d Layer:
 class Attention_Block(nn.Module):
+    #https://arxiv.org/pdf/1912.03458.pdf
     def __init__(self, bottleneck_units, out_channels, in_channels):
         super(Attention_Block, self).__init__()
         
@@ -191,6 +201,7 @@ class Attention_Block(nn.Module):
         return x
     
 class DynamicConv2d(nn.Module):
+    # https://arxiv.org/abs/1912.03458
     def __init__(self, in_channels, out_channels, kernel_size, 
                  stride=1, padding=0, groups=1, reduction_factor=16, 
                  num_kernels=4, dilation=1, num_conditions=5, bias=True):
@@ -469,6 +480,31 @@ class DynamicGatedUNet(pl.LightningModule):
     As the image is upsampled, spatial resolution is increased while the number of channels is decreased.
     The ResUNet class is designed to be used with 2D image data.
     in_channels = The number of channels in the input image representation.
+    levels = The number of levels in the ResUNet.
+    channels = The number of channels in the input image representation.
+    depth = The depth of the ResUNet.
+    up_mode = The method used to upsample the input image representation.
+    merge_mode = The method used to merge the input and upsampled image representations.
+    num_layers = The number of convolutional layers in the ResBlock.
+    activation = The activation function used in the ResBlock.
+    dropout_rate = The dropout rate used in the ResBlock.
+    learning_rate = The learning rate used in the ResUNet.
+    weight_decay = The weight decay used in the ResUNet.
+    starting_filters = The number of filters used in the first convolutional layer.
+    num_blocks_per_layer = The number of ResBlocks in each layer of the ResUNet.
+    epochs = The number of epochs used in the training of the ResUNet.
+    mini_batches = The number of mini-batches used in the training of the ResUNet.
+    warm_up_epochs = The number of warm-up epochs used in the training of the ResUNet.
+    device = The device used in the training of the ResUNet.
+    teacher_model = The teacher model used in the distillation process.
+    alpha = The alpha parameter used in the distillation process.
+    temperature = The temperature parameter used in the distillation process.
+    start_temperature = The starting temperature used in the distillation process.
+    final_temperature = The final temperature used in the distillation process.
+    warm_temperature_epochs = The number of warm-up epochs used in the distillation process.
+    reduction_factor = The reduction factor used in the Dynamic Convolutional Layer.
+
+    
     """
 
     def __init__(

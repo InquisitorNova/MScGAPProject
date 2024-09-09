@@ -5,7 +5,14 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. The ResBlock has been modified to include a GroupNorm layer
+and a scaled dot-product attention mechanism. The attention mechanism is used to weight the value
+vectors in the ResBlock. The ResBlock is used in the UNet architecture to allow for information to
+travel between the encoder and decoder pathways. The ResBlock is used in the UNet architecture to
+allow for information to travel between the encoder and decoder pathways. https://arxiv.org/pdf/1706.03762.pdf
+The ResBlock is used in the UNet architecture to allow for information to travel between the encoder and decoder pathways.
+For reference here is the Pytorch implementation of the Transformer module:
+https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/transformer.py
 
 The original MIT License is as follows:
 
@@ -97,7 +104,7 @@ class AttentionBlock(nn.Module):
     to obtain the attention weights. The attention weights are then used to weight the value
     vectors to obtain the final output of the attention block.
     The output is then reshaped back into an image representation.
-    
+    https://arxiv.org/pdf/1706.03762.pdf
     """
 
     def __init__(self, n_channels, n_heads, dim_k, n_groups, dropout_rate):
@@ -369,6 +376,20 @@ class AttnResUNet(pl.LightningModule):
     As the image is upsampled, spatial resolution is increased while the number of channels is decreased.
     The ResUNet class is designed to be used with 2D image data.
     in_channels = The number of channels in the input image representation.
+    levels = The number of levels in the UNet architecture.
+    channels = The number of channels in the input image representation.
+    depth = The depth of the UNet architecture.
+    up_mode = The method used to upsample the input image representation.
+    merge_mode = The method used to merge the input and upsampled image representations.
+    num_layers = The number of convolutional layers in the ResBlock.
+    activation = The activation function used in the ResBlock.
+    dropout_rate = The dropout rate used in the ResBlock.
+    learning_rate = The learning rate used in the ResUNet.
+    weight_decay = The weight decay used in the ResUNet.
+    starting_filters = The number of filters used in the first convolutional layer.
+    num_blocks_per_layer = The number of ResBlocks used in each layer of the ResUNet.
+    This code is inspired by the Attention is all you need paper and the Attention UNet paper: 
+    https://arxiv.org/pdf/1706.03762 and https://arxiv.org/pdf/1804.03999
     """
 
     def __init__(

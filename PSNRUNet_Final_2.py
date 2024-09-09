@@ -5,8 +5,12 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
-
+amounts of layers in the ResBlock. I have also added the ability to use GroupNorm layers in the ResBlock
+and the ability to use a different number of channels per group in the GroupNorm layers.
+For this UNet implementation, I have created a positional embedder to cinvert the PSNR value into a timestep
+and then from a timestep into a positional embedding. This is used to encode the PSNR value into the image representation.
+This is then used to condition the network on the PSNR value. This network is designed to be used with 2D image data.
+and based on the the UNet architecture introduced in the original diffusion paper (https://arxiv.org/pdf/2006.11239)
 The original MIT License is as follows:
 
 MIT License
@@ -68,6 +72,10 @@ def find_group_number(channels, min_group_channels = 4, max_group_channels = 32)
     # Return 1 if no valid number exists.
     return 1
 
+
+# Introduced the PSNR to Timestep and Timestep to Positional Embedding transformations,
+# as well as the Temporal Embedder class. These classes are used to encode the PSNR value
+# into the image representation and condition the network on the PSNR value.
 # Define the transformation for converting psnr into timesteps.
 def psnr_to_timestep(psnr_map, minpsnr, maxpsnr, num_timesteps):
     """
@@ -580,8 +588,12 @@ class ResUNet(pl.LightningModule):
     def configure_optimizers(self):
         num_warm_steps = self.mini_batches * self.warm_up_epochs
         num_training_steps = self.mini_batches * self.epochs
+
+        # Changed from the Adam Optimizer to the AdamW Optimizer t improve performance.
         optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate, weight_decay = 1e-4)
 
+
+        # Introduced the OneCycleLR Scheduler to improve performance.
         Scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr = self.learning_rate, total_steps = num_training_steps, 
                                                       epochs = self.epochs, pct_start = 0.1, anneal_strategy = "cos", 
                                                       div_factor = 10.0, final_div_factor = 1.0)

@@ -5,7 +5,20 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
+amounts of layers in the ResBlock. I have added the ability to use GroupNorm layers in the ResBlock
+and the ability to use dropout layers in the ResBlock. I have also added the ability to use different
+types of pooling layers in the ResBlock. The ResUNet is designed to be used with 2D image data.
+This ResNet performs deep supervision, which means that the network is trained to predict the output
+at multiple stages of the network. This is designed to improve the performance of the network.
+The ResUNet also used a prior network to compute the input to the ResNet as a function of the 
+noisy image and the dataset's average face. This is designed to improve the performance of the network.
+This ResUNet is inspired by a number of different papers, including:
+1. U-Net: Convolutional Networks for Biomedical Image Segmentation
+    https://arxiv.org/abs/1505.04597
+2. Deep Residual Learning for Image Recognition
+    https://arxiv.org/abs/1512.03385
+3. A Comprehensive Review on Deep Supervision: Theories and Applications:
+    https://arxiv.org/abs/2207.02376
 
 The original MIT License is as follows:
 
@@ -677,8 +690,11 @@ class AdvDeepSupResUNet(pl.LightningModule):
     def configure_optimizers(self):
         num_warm_steps = self.mini_batches * self.warm_up_epochs
         num_training_steps = self.mini_batches * self.epochs
+
+        # Changed the optimize from Adam to AdamW to decople weight decay and reduce overfitting.
         optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate, weight_decay = 1e-4)
 
+        # Use the OneCycleLR learning rate scheduler.
         Scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr = self.learning_rate, total_steps = num_training_steps, 
                                                       epochs = self.epochs, pct_start = 0.1, anneal_strategy = "cos", 
                                                       div_factor = 10.0, final_div_factor = 1.0)

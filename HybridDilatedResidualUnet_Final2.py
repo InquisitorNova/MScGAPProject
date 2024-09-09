@@ -5,8 +5,13 @@ and Alex Krull.
 https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
 I have modifield the UNet to be incorporated into the GAP Framework, adding additional features
 such as the ability to use different activation functions, and the ability to use different
-amounts of layers in the ResBlock.
-
+amounts of layers in the ResBlock.The ResBlock has been modified to include GroupNorm layers
+and the HDCBlock has been added to the ResBlock to allow for the use of dilated convolutions.
+to improve the receptive field of the network. The HDC Block is a modification of the ResBlock
+that includes a custom hybrid hquadratic dilated convolution block that uses dilated convolutions
+This dilation allows for the network to increase its receptive field without having to scarfrice its
+spatial resolution. The HDCBlock is a modification of the ResBlock that uses dilated convolutions
+https://www.sciencedirect.com/science/article/pii/S0010482521002432
 The original MIT License is as follows:
 
 MIT License
@@ -74,6 +79,7 @@ class HDCBlock(nn.Module):
     in_channels = The number of input channels to the block.
     out_channels = The number of output channels from the block.
     dilation_type = The type of dilation to use. Options are "even" and "odd".
+    https://www.sciencedirect.com/science/article/pii/S0010482521002432
     """
     def __init__(self, in_channels, out_channels, dilation_type = "even"):
         super(HDCBlock, self).__init__()

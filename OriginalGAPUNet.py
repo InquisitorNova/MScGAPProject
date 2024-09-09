@@ -1,9 +1,13 @@
 """
-This is a modified version of the U-Net implementation by Jackson Huang
+This is a copy of the original Res-UNet implementation used by Alex Krull that builds upon the work of Jackson Haung
 (https://github.com/jaxony/unet-pytorch/)
+https://github.com/krulllab/GAP/blob/main/gap/GAP_UNET_ResBlock.py
+I have made some modifications to the original code to make it compatible with my 
+setup, but the core of the code remains the same. The code was kept as close to the original as possible
+to ensure that the original authors receive the credit they deserve and for evaluating the performance of the
+the proposed models in this project. The original code was released under the MIT License, and I have kept the
 
-
-This is the original license text:
+The original MIT License is as follows:
 
 MIT License
 
